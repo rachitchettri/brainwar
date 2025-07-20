@@ -1,0 +1,37 @@
+// File: prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  elo       Int      @default(1200)
+  matches   Match[]  @relation("PlayerMatches")
+  createdAt DateTime @default(now())
+}
+
+model Match {
+  id        String     @id @default(uuid())
+  roomId    String
+  players   User[]     @relation("PlayerMatches")
+  questions Question[] @relation("MatchQuestions")
+  scores    Json
+  category  String
+  createdAt DateTime   @default(now())
+}
+
+model Question {
+  id       String   @id @default(uuid())
+  category String
+  content  String
+  options  String[]
+  correct  Int
+  matches  Match[]  @relation("MatchQuestions")
+}
