@@ -62,7 +62,7 @@ export default function HomePage() {
         {user && (
           <div className="flex justify-center gap-4">
             <Link
-              href="/matchmaking"
+              href="/battle/roomId"
               className="bg-yellow-400 hover:bg-yellow-300 text-black font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300"
             >
               Start Battle

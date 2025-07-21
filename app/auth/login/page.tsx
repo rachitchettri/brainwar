@@ -1,4 +1,3 @@
-// File: app/(auth)/login/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -9,23 +8,27 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
+  const dummyUsers = [
+    { email: "test1@brainwar.com", password: "123456", username: "PlayerOne" },
+    { email: "test2@brainwar.com", password: "123456", username: "PlayerTwo" },
+    { email: "test3@brainwar.com", password: "123456", username: "PlayerThree" },
+    { email: "test4@brainwar.com", password: "123456", username: "PlayerFour" },
+    { email: "test5@brainwar.com", password: "123456", username: "PlayerFive" },
+  ];
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-  
-    const dummyUser = {
-      email: "test@brainwar.com",
-      password: "123456",
-      username: "TestUser",
-    };
-  
-    if (email === dummyUser.email && password === dummyUser.password) {
-      localStorage.setItem("user", JSON.stringify(dummyUser));
+    const matched = dummyUsers.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (matched) {
+      localStorage.setItem("user", JSON.stringify(matched));
       router.push("/");
     } else {
-      alert("Invalid credentials. Try test@brainwar.com / 123456");
+      alert("Invalid credentials. Try test1@brainwar.com / 123456 etc.");
     }
   };
-  
 
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-900 via-purple-800 to-indigo-900 text-white">
