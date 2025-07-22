@@ -1,31 +1,53 @@
-// File: app/(dashboard)/page.tsx
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
+interface Battle {
+  date: string;
+  opponent: string;
+  category: string;
+  result: "Win" | "Loss";
+  eloChange: number;
+}
 
 export default function DashboardPage() {
+  const [elo, setElo] = useState(0);
+  const [rank, setRank] = useState(0);
+  const [matches, setMatches] = useState(0);
+  const [battles, setBattles] = useState<Battle[]>([]);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (!user.email) return;
+
+    fetch(`/api/dashboard?email=${user.email}`)
+      .then(res => res.json())
+      .then(data => {
+        setElo(data.elo);
+        setRank(data.rank);
+        setMatches(data.totalMatches);
+        setBattles(data.recentBattles);
+      });
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-800 to-indigo-900 text-white px-6 py-10">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-4xl font-bold mb-6 text-yellow-400 drop-shadow">Dashboard</h1>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {/* Total Matches */}
           <div className="bg-white/10 rounded-lg p-6 shadow-lg backdrop-blur">
             <h2 className="text-lg font-semibold mb-2">Total Matches</h2>
-            <p className="text-3xl font-bold text-yellow-300">24</p>
+            <p className="text-3xl font-bold text-yellow-300">{matches}</p>
           </div>
-
-          {/* Current ELO */}
           <div className="bg-white/10 rounded-lg p-6 shadow-lg backdrop-blur">
             <h2 className="text-lg font-semibold mb-2">Current ELO</h2>
-            <p className="text-3xl font-bold text-green-400">1375</p>
+            <p className="text-3xl font-bold text-green-400">{elo}</p>
           </div>
-
-          {/* Rank Position */}
           <div className="bg-white/10 rounded-lg p-6 shadow-lg backdrop-blur">
             <h2 className="text-lg font-semibold mb-2">Leaderboard Rank</h2>
-            <p className="text-3xl font-bold text-blue-300">#7</p>
+            <p className="text-3xl font-bold text-blue-300">#{rank}</p>
           </div>
         </div>
 
@@ -43,20 +65,17 @@ export default function DashboardPage() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-t border-white/10 hover:bg-white/5 transition">
-                  <td className="px-4 py-2">July 18</td>
-                  <td className="px-4 py-2">@quizKing</td>
-                  <td className="px-4 py-2">Math</td>
-                  <td className="px-4 py-2 text-green-300 font-semibold">Win</td>
-                  <td className="px-4 py-2">+24</td>
-                </tr>
-                <tr className="border-t border-white/10 hover:bg-white/5 transition">
-                  <td className="px-4 py-2">July 17</td>
-                  <td className="px-4 py-2">@brainyNerd</td>
-                  <td className="px-4 py-2">GK</td>
-                  <td className="px-4 py-2 text-red-300 font-semibold">Loss</td>
-                  <td className="px-4 py-2">-17</td>
-                </tr>
+                {battles.map((battle, i) => (
+                  <tr key={i} className="border-t border-white/10 hover:bg-white/5 transition">
+                    <td className="px-4 py-2">{battle.date}</td>
+                    <td className="px-4 py-2">@{battle.opponent}</td>
+                    <td className="px-4 py-2">{battle.category}</td>
+                    <td className={`px-4 py-2 font-semibold ${battle.result === "Win" ? "text-green-300" : "text-red-300"}`}>
+                      {battle.result}
+                    </td>
+                    <td className="px-4 py-2">{battle.eloChange > 0 ? "+" : ""}{battle.eloChange}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

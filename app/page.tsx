@@ -26,27 +26,28 @@ export default function HomePage() {
             <span className="text-white/80">Hello, {user.username || user.email}</span>
             <button
               onClick={handleLogout}
-              className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-medium transition"
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition"
             >
               Logout
             </button>
+
           </>
         ) : (
           <>
-          <Link
-            href="/auth/login"
-            className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-medium transition"
-          >
-            Login
-          </Link>
-          <Link
-            href="/auth/register"
-            className="bg-yellow-400 hover:bg-yellow-300 text-black px-4 py-2 rounded-lg font-medium transition"
-          >
-            Register
-          </Link>
-        </>
-        
+            <Link
+              href="/auth/login"
+              className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-medium transition"
+            >
+              Login
+            </Link>
+            <Link
+              href="/auth/register"
+              className="bg-yellow-400 hover:bg-yellow-300 text-black px-4 py-2 rounded-lg font-medium transition"
+            >
+              Register
+            </Link>
+          </>
+
         )}
       </div>
 
@@ -62,7 +63,7 @@ export default function HomePage() {
         {user && (
           <div className="flex justify-center gap-4">
             <Link
-              href="/battle/roomId"
+              href="/matchmaking"
               className="bg-yellow-400 hover:bg-yellow-300 text-black font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300"
             >
               Start Battle
